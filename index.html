@@ -1,36 +1,24 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Magang DTETI</title>
 <link rel="stylesheet" href="style.css">
 
-<!-- Header -->
 <div class="header">
-  <svg class="header-logo" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="36" height="36" rx="8" fill="var(--accent)"/>
-    <text x="18" y="22" text-anchor="middle" font-family="'DM Sans',sans-serif" font-weight="700" font-size="10" fill="#fff">DTETI</text>
-  </svg>
-  <span class="header-title">Magang DTETI</span>
+  <img class="header-logo" src="assets/dteti.jpg" alt="DTETI">
+  <span class="header-title">Magang DTETI 2027</span>
 </div>
 
-<!-- Nav arrows (desktop) -->
 <button class="nav-arrow left" onclick="carousel.prev()" aria-label="Sebelumnya">‹</button>
 <button class="nav-arrow right" onclick="carousel.next()" aria-label="Selanjutnya">›</button>
 
-<!-- Carousel -->
 <div class="carousel" id="carousel">
   <div class="carousel-track" id="track"></div>
 </div>
 
-<!-- Dots -->
-<div class="dots" id="dots"></div>
+<div class="counter" id="counter">1 / 14</div>
 
-<!-- Footer -->
 <div class="footer">
-  <svg class="footer-logo" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
-    <text x="60" y="26" text-anchor="middle" font-family="'DM Sans',serif" font-weight="700" font-size="13" fill="var(--fg-muted)">Universitas Gadjah Mada</text>
-  </svg>
+  <img class="footer-logo" src="assets/ugm.jpg" alt="Universitas Gadjah Mada">
 </div>
 
-<!-- Detail overlay -->
 <div class="detail-overlay" id="detail">
   <button class="detail-close" onclick="closeDetail()">← Kembali</button>
   <div id="detail-content"></div>
@@ -41,6 +29,7 @@ const MITRA = [
   {
     name: "Dinas Komunikasi Informatika dan Persandian Kota Yogyakarta",
     short: "Diskominfo",
+    logo: "assets/kominfosan.png",
     prodi: "TIF",
     topik: [
       { t: "Penanganan Insiden (Incident Response)", kuota: 1, tb: null, tif: "TIF265121 Forensik Digital (3); TIF265122 Keamanan dan Integritas Data (3); TIF265123 Peretasan Beretika (3)" },
@@ -52,6 +41,7 @@ const MITRA = [
   {
     name: "JALA Tech",
     short: "JALA",
+    logo: "assets/jala-tech.png",
     prodi: "TIF/TB",
     topik: [
       { t: "AI untuk otomasi alat dan pemantauan kondisi tambak", kuota: 1, tb: "TKBM262621 Internet of Medical Things (2); TKBM262634 Sistem Instrumentasi Biomedis Cerdas (3); TKBM262646 Sistem Otomasi Biomedis (3)", tif: "TIF265124 Sistem Berbasis Internet of Things (3); TIF265132 Pembelajaran Dalam (3); TIF265131 Big Data dan Analitik (3)" },
@@ -62,6 +52,7 @@ const MITRA = [
   {
     name: "PT Karya Solusi Angkasa / CV Buana Karya Instrument",
     short: "KSA",
+    logo: "assets/karyasolusiangkasa.png",
     prodi: "TIF/TB",
     topik: [
       { t: "Drone AI Processing", kuota: 4, tb: "TKBM262645 Robotika Biomedis (2); TKBM262634 Sistem Instrumentasi Biomedis Cerdas (3); TKBM262646 Sistem Otomasi Biomedis (3)", tif: "TIF265134 Pengolahan Citra dan Visi Komputer (3); TIF265132 Pembelajaran Dalam (3); TIF265124 Sistem Berbasis Internet of Things (3)" },
@@ -71,6 +62,7 @@ const MITRA = [
   {
     name: "Pusat Riset Elektronika – BRIN",
     short: "BRIN",
+    logo: "assets/brin.jpg",
     prodi: "TIF/TB",
     topik: [
       { t: "Potensiostat Raspberry Pi dengan pemrosesan sinyal elektrokimia, ML, dan AI", kuota: 2, tb: "TKBM262641 Bioelectrochemistry (2); TKBM262634 Sistem Instrumentasi Biomedis Cerdas (3); TKBM262612 Analisis Sinyal Biomedis Multimodal (3)", tif: "TIF265132 Pembelajaran Dalam (3); TIF265124 Sistem Berbasis Internet of Things (3); TIF265131 Big Data dan Analitik (3)" }
@@ -79,6 +71,7 @@ const MITRA = [
   {
     name: "Beehive Drones",
     short: "BHD",
+    logo: "assets/beehives.png",
     prodi: "TIF/TB",
     topik: [
       { t: "Pemrosesan onboard dan miniaturisasi drone", kuota: 2, tb: "TKBM262634 Sistem Instrumentasi Biomedis Cerdas (3); TKBM262643 Microelectronics (3); TKBM262645 Robotika Biomedis (2)", tif: "TIF265124 Sistem Berbasis Internet of Things (3); TIF265134 Pengolahan Citra dan Visi Komputer (3); TIF265132 Pembelajaran Dalam (3)" },
@@ -89,6 +82,7 @@ const MITRA = [
   {
     name: "Nusapala Berkah Autonomous",
     short: "NBA",
+    logo: "assets/nusapalaberkah.png",
     prodi: "TIF/TB",
     topik: [
       { t: "Open-Vocabulary and Generic Object Detection", kuota: 1, tb: "TKBM262611 Analisis Citra Biomedis (3); TKBM262634 Sistem Instrumentasi Biomedis Cerdas (3)", tif: "TIF265134 Pengolahan Citra dan Visi Komputer (3); TIF265132 Pembelajaran Dalam (3); TIF265131 Big Data dan Analitik (3)" },
@@ -98,6 +92,7 @@ const MITRA = [
   {
     name: "CV Buana Karya Instrument",
     short: "BKI",
+    logo: "assets/buanakarya.jpg",
     prodi: "TIF/TB",
     topik: [
       { t: "Manufaktur dan Perakitan Drone untuk misi pemetaan", kuota: 2, tb: "TKBM262645 Robotika Biomedis (2); TKBM262643 Microelectronics (3); TKBM262634 Sistem Instrumentasi Biomedis Cerdas (3)", tif: "TIF265124 Sistem Berbasis Internet of Things (3); TIF265111 Integrasi Aplikasi dan Informasi (3)" },
@@ -107,6 +102,7 @@ const MITRA = [
   {
     name: "PT Gamatechno Indonesia",
     short: "GMT",
+    logo: "assets/gamatechno.jpg",
     prodi: "TIF",
     topik: [
       { t: "AI untuk Customer/Technical Support", kuota: 2, tb: null, tif: "TIF265133 Pemrosesan Bahasa Alami (3); TIF265132 Pembelajaran Dalam (3); TIF265111 Integrasi Aplikasi dan Informasi (3)" },
@@ -116,6 +112,7 @@ const MITRA = [
   {
     name: "PT Global Data Inspirasi",
     short: "GDI",
+    logo: "assets/datains.png",
     prodi: "TIF/TB",
     topik: [
       { t: "Pengembangan Model Computer Vision", kuota: 4, tb: "TKBM262611 Analisis Citra Biomedis (3); TKBM262612 Analisis Sinyal Biomedis Multimodal (3)", tif: "TIF265134 Pengolahan Citra dan Visi Komputer (3); TIF265132 Pembelajaran Dalam (3); TIF265131 Big Data dan Analitik (3)" },
@@ -126,6 +123,7 @@ const MITRA = [
   {
     name: "Kelompok Riset Biomekatronika",
     short: "BioM",
+    logo: "assets/brin.jpg",
     prodi: "TIF/TB",
     topik: [
       { t: "Smart Insole untuk analisa Gait", kuota: 4, tb: "TKBM262636 Teknologi Asistif dan Rehabilitasi (3); TKBM262612 Analisis Sinyal Biomedis Multimodal (3); TKBM262634 Sistem Instrumentasi Biomedis Cerdas (3)", tif: "TIF265124 Sistem Berbasis Internet of Things (3); TIF265131 Big Data dan Analitik (3); TIF265135 Sistem Pendukung Keputusan (3)" },
@@ -136,6 +134,7 @@ const MITRA = [
   {
     name: "Domba Makmur Indonesia Farm",
     short: "DMI",
+    logo: "",
     prodi: "TIF/TB",
     topik: [
       { t: "Smart Sheep Farm: Computer Vision untuk Peternakan Domba", kuota: "2-3", tb: "TKBM262611 Analisis Citra Biomedis (3); TKBM262634 Sistem Instrumentasi Biomedis Cerdas (3)", tif: "TIF265134 Pengolahan Citra dan Visi Komputer (3); TIF265132 Pembelajaran Dalam (3); TIF265124 Sistem Berbasis Internet of Things (3)" }
@@ -144,6 +143,7 @@ const MITRA = [
   {
     name: "PT Aino Indonesia",
     short: "AINO",
+    logo: "assets/aino.jpg",
     prodi: "TIF/TB",
     topik: [
       { t: "Optimasi dan Prediksi Kepadatan Penumpang pada Sistem Transportasi", kuota: 2, tb: "TKBM262632 Manajemen Informasi Biomedis (2); TKBM262621 Internet of Medical Things (2)", tif: "TIF265131 Big Data dan Analitik (3); TIF265135 Sistem Pendukung Keputusan (3); TIF265132 Pembelajaran Dalam (3)" },
@@ -153,6 +153,7 @@ const MITRA = [
   {
     name: "PT Astana Indra Karya",
     short: "AIK",
+    logo: "assets/astanaindrakarya.jpg",
     prodi: "TIF/TB",
     topik: [
       { t: "Modifikasi rancang bangun PoE Splitter pada unit NTP Digital Clock", kuota: 2, tb: "TKBM262643 Microelectronics (3); TKBM262634 Sistem Instrumentasi Biomedis Cerdas (3); TKBM262621 Internet of Medical Things (2)", tif: "TIF265124 Sistem Berbasis Internet of Things (3); TIF265111 Integrasi Aplikasi dan Informasi (3)" },
@@ -163,6 +164,7 @@ const MITRA = [
   {
     name: "PT Stechoq Robotika Indonesia",
     short: "STQ",
+    logo: "assets/stechoq.png",
     prodi: "TIF/TB",
     topik: [
       { t: "Hardware Engineering Support", kuota: "Belum diisi", tb: "TKBM262645 Robotika Biomedis (2); TKBM262634 Sistem Instrumentasi Biomedis Cerdas (3); TKBM262646 Sistem Otomasi Biomedis (3)", tif: "TIF265124 Sistem Berbasis Internet of Things (3); TIF265111 Integrasi Aplikasi dan Informasi (3)" },
@@ -171,58 +173,48 @@ const MITRA = [
   }
 ];
 
-// Build slides
 const track = document.getElementById('track');
-const dotsEl = document.getElementById('dots');
+const counterEl = document.getElementById('counter');
 const detailEl = document.getElementById('detail');
 const detailContent = document.getElementById('detail-content');
 let current = 0;
 
-function getProdiClass(p) {
-  if (p === 'TIF/TB' || p.includes('TIF') && p.includes('TB')) return 'prodi-both';
-  if (p === 'TIF') return 'prodi-tif';
-  return 'prodi-tb';
+function badgeClass(p) {
+  if (p.includes('TIF') && p.includes('TB')) return 'badge-both';
+  if (p === 'TIF') return 'badge-tif';
+  return 'badge-tb';
 }
-
-function getProdiLabel(p) {
-  if (p === 'TIF/TB' || (p.includes('TIF') && p.includes('TB'))) return 'TIF & TB';
+function badgeLabel(p) {
+  if (p.includes('TIF') && p.includes('TB')) return 'TIF & TB';
   return p;
 }
 
-function getInitials(name) {
-  // Use the short name's first 2-3 chars
-  return name.substring(0, 2);
+function logoEl(src, alt, cls) {
+  if (src) return `<img class="${cls}" src="${src}" alt="${alt}">`;
+  return `<div class="${cls}">${alt}</div>`;
 }
 
 MITRA.forEach((m, i) => {
-  // Slide
   const slide = document.createElement('div');
   slide.className = 'slide';
   slide.setAttribute('role', 'group');
   slide.setAttribute('aria-label', `Mitra ${i+1} dari ${MITRA.length}: ${m.name}`);
   slide.innerHTML = `
-    <div class="mitra-logo-placeholder">${m.short}</div>
+    ${logoEl(m.logo, m.short, 'mitra-logo-box')}
     <div class="mitra-name">${m.name}</div>
-    <span class="mitra-prodi-badge ${getProdiClass(m.prodi)}">${getProdiLabel(m.prodi)}</span>
-    <span class="tap-hint">Ketuk untuk lihat detail →</span>
+    <span class="badge ${badgeClass(m.prodi)}">${badgeLabel(m.prodi)}</span>
+    <span class="tap-hint">Ketuk untuk detail</span>
   `;
   slide.addEventListener('click', () => openDetail(i));
   track.appendChild(slide);
-
-  // Dot
-  const dot = document.createElement('div');
-  dot.className = 'dot' + (i === 0 ? ' active' : '');
-  dot.addEventListener('click', () => goTo(i));
-  dotsEl.appendChild(dot);
 });
 
 function goTo(idx) {
-  // Circular
   if (idx < 0) idx = MITRA.length - 1;
   if (idx >= MITRA.length) idx = 0;
   current = idx;
   track.style.transform = `translateX(-${current * 100}%)`;
-  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+  counterEl.textContent = `${current + 1} / ${MITRA.length}`;
 }
 
 // Touch/swipe
@@ -280,13 +272,13 @@ function openDetail(idx) {
   const m = MITRA[idx];
   let html = `
     <div class="detail-header">
-      <div class="detail-logo">${m.short}</div>
+      ${logoEl(m.logo, m.short, 'detail-logo')}
       <div>
         <div class="detail-mitra-name">${m.name}</div>
-        <span class="mitra-prodi-badge ${getProdiClass(m.prodi)}" style="margin-top:6px">${getProdiLabel(m.prodi)}</span>
+        <span class="badge ${badgeClass(m.prodi)}" style="margin-top:6px;display:inline-block">${badgeLabel(m.prodi)}</span>
       </div>
     </div>
-    <div class="detail-section-label">Topik Magang & Rekomendasi MK Pilihan</div>
+    <div class="section-label">Topik Magang & Rekomendasi MK Pilihan</div>
   `;
 
   m.topik.forEach(tp => {
@@ -298,7 +290,7 @@ function openDetail(idx) {
       <div class="topik-kuota">Kuota: ${tp.kuota}</div>`;
 
     if (mkTif.length > 0) {
-      html += `<div class="mk-group-label tif">Rekomendasi MK TIF</div><ul class="mk-list">`;
+      html += `<div class="mk-label tif">Rekomendasi MK TIF</div><ul class="mk-list">`;
       mkTif.forEach(mk => {
         html += `<li class="mk-item"><code>${mk.kode}</code> ${mk.nama}${mk.sks ? ` (${mk.sks} SKS)` : ''}</li>`;
       });
@@ -306,7 +298,7 @@ function openDetail(idx) {
     }
 
     if (mkTb.length > 0) {
-      html += `<div class="mk-group-label tb">Rekomendasi MK TB</div><ul class="mk-list">`;
+      html += `<div class="mk-label tb">Rekomendasi MK TB</div><ul class="mk-list">`;
       mkTb.forEach(mk => {
         html += `<li class="mk-item"><code>${mk.kode}</code> ${mk.nama}${mk.sks ? ` (${mk.sks} SKS)` : ''}</li>`;
       });
@@ -324,8 +316,5 @@ function closeDetail() {
   detailEl.classList.remove('open');
 }
 
-// Expose for nav arrows
 window.carousel = { prev: () => goTo(current - 1), next: () => goTo(current + 1) };
 </script>
-
-</body></html>
