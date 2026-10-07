@@ -111,20 +111,23 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 110px 24px 90px;
-  gap: 16px;
+  padding: 90px 24px 70px;
+  gap: clamp(12px, 2vh, 24px);
   cursor: pointer;
   background: #000;
 }
 
 .mitra-logo-box {
-  width: 140px; height: 140px;
+  /* responsive: picks the smaller of 60vw or 40vh so it fills nicely on tall phones */
+  width: min(75vw, 55vh);
+  height: min(75vw, 55vh);
+  max-width: 360px; max-height: 360px;
   border-radius: 20px;
   background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
   font-weight: 700;
   color: var(--accent);
   line-height: 1;
@@ -142,7 +145,7 @@ img.detail-logo {
 }
 
 .mitra-name {
-  font-size: 1.2rem;
+  font-size: clamp(1.1rem, 3.5vw, 1.5rem);
   font-weight: 700;
   text-align: center;
   line-height: 1.3;
