@@ -1,0 +1,403 @@
+/* Layout: full-viewport swipeable carousel, one mitra per slide */
+/* Color: clean institutional white with blue DTETI accent */
+/* Type: DM Sans for headings, Inter for body — modern academic feel */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a2e;
+  --fg-muted: #5a5a72;
+  --accent: #1b3a6b;
+  --accent-light: #e8edf5;
+  --border: #d8dce6;
+  --card-bg: #f7f8fb;
+  --slide-bg: #ffffff;
+  --overlay-bg: rgba(255,255,255,0.97);
+  --tag-tb: #2e7d32;
+  --tag-tif: #1565c0;
+  --tag-both: #6a1b9a;
+  --font-display: 'DM Sans', 'Segoe UI', sans-serif;
+  --font-body: 'Inter', 'Segoe UI', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1117;
+    --fg: #e2e4ea;
+    --fg-muted: #9a9cb0;
+    --accent: #6b9eff;
+    --accent-light: #1a2340;
+    --border: #2a2d3a;
+    --card-bg: #161921;
+    --slide-bg: #12141c;
+    --overlay-bg: rgba(14,17,23,0.97);
+    --tag-tb: #66bb6a;
+    --tag-tif: #64b5f6;
+    --tag-both: #ce93d8;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1117;
+  --fg: #e2e4ea;
+  --fg-muted: #9a9cb0;
+  --accent: #6b9eff;
+  --accent-light: #1a2340;
+  --border: #2a2d3a;
+  --card-bg: #161921;
+  --slide-bg: #12141c;
+  --overlay-bg: rgba(14,17,23,0.97);
+  --tag-tb: #66bb6a;
+  --tag-tif: #64b5f6;
+  --tag-both: #ce93d8;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  height: 100%;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html { height: 100%; }
+
+/* ── Top header ── */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: calc(env(safe-area-inset-top, 0px) + 14px) 20px 14px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-logo {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.header-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── Footer with UGM logo ── */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px calc(env(safe-area-inset-bottom, 0px) + 10px);
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+
+.footer-logo {
+  height: 40px;
+  opacity: 0.7;
+}
+
+/* ── Carousel container ── */
+.carousel {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.carousel-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  will-change: transform;
+}
+
+.carousel-track.dragging {
+  transition: none;
+}
+
+/* ── Slide ── */
+.slide {
+  flex: 0 0 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 90px 32px 80px;
+  gap: 20px;
+  cursor: pointer;
+  background: var(--slide-bg);
+}
+
+.slide:active {
+  background: var(--accent-light);
+}
+
+.mitra-logo-placeholder {
+  width: 160px;
+  height: 160px;
+  border-radius: 24px;
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  line-height: 1;
+  text-align: center;
+  padding: 12px;
+  flex-shrink: 0;
+}
+
+.mitra-name {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.3;
+  color: var(--fg);
+  max-width: 340px;
+}
+
+.mitra-prodi-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.prodi-tif { background: color-mix(in srgb, var(--tag-tif) 15%, transparent); color: var(--tag-tif); }
+.prodi-tb { background: color-mix(in srgb, var(--tag-tb) 15%, transparent); color: var(--tag-tb); }
+.prodi-both { background: color-mix(in srgb, var(--tag-both) 15%, transparent); color: var(--tag-both); }
+
+.tap-hint {
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+  margin-top: 4px;
+}
+
+/* ── Dot indicators ── */
+.dots {
+  position: fixed;
+  bottom: 68px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 101;
+  display: flex;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--bg);
+  border-radius: 20px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.3s, transform 0.3s;
+}
+
+.dot.active {
+  background: var(--accent);
+  transform: scale(1.3);
+}
+
+/* ── Detail overlay ── */
+.detail-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 200;
+  background: var(--overlay-bg);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: calc(env(safe-area-inset-top, 0px) + 16px) 20px calc(env(safe-area-inset-bottom, 0px) + 20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.detail-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.detail-close {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.detail-close:hover { background: var(--accent-light); }
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.detail-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.detail-mitra-name {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--fg);
+  line-height: 1.3;
+}
+
+.detail-section-label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  margin-bottom: 10px;
+}
+
+.topik-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.topik-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.topik-kuota {
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  margin-bottom: 10px;
+}
+
+.mk-group-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  margin-top: 10px;
+}
+
+.mk-group-label.tif { color: var(--tag-tif); }
+.mk-group-label.tb { color: var(--tag-tb); }
+
+.mk-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mk-item {
+  font-size: 0.8rem;
+  color: var(--fg);
+  padding: 4px 0;
+  line-height: 1.4;
+}
+
+.mk-item code {
+  font-size: 0.7rem;
+  background: var(--accent-light);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--fg-muted);
+  margin-right: 4px;
+}
+
+/* ── Swipe arrows (desktop hint) ── */
+.nav-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 102;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--fg-muted);
+  font-size: 1.1rem;
+  transition: background 0.2s;
+}
+.nav-arrow:hover { background: var(--accent-light); color: var(--accent); }
+.nav-arrow.left { left: 12px; }
+.nav-arrow.right { right: 12px; }
+
+@media (max-width: 600px) {
+  .nav-arrow { display: none; }
+  .mitra-logo-placeholder { width: 130px; height: 130px; font-size: 2.4rem; }
+  .mitra-name { font-size: 1.25rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-track { transition-duration: 0.01ms !important; }
+  .detail-overlay { transition-duration: 0.01ms !important; }
+}
