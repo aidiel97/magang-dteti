@@ -1,27 +1,34 @@
 <title>Magang DTETI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
 
+<!-- Header -->
 <div class="header">
   <img class="header-logo" src="assets/dteti.jpg" alt="DTETI">
-  <span class="header-title">Magang DTETI 2027</span>
+  <div class="header-title">Magang DTETI 2027</div>
 </div>
 
-<button class="nav-arrow left" onclick="carousel.prev()" aria-label="Sebelumnya">‹</button>
-<button class="nav-arrow right" onclick="carousel.next()" aria-label="Selanjutnya">›</button>
-
-<div class="carousel" id="carousel">
-  <div class="carousel-track" id="track"></div>
+<!-- Drum picker -->
+<div class="drum" id="drum">
+  <div class="drum-fade drum-fade-top"></div>
+  <div class="drum-fade drum-fade-bottom"></div>
+  <div class="drum-track" id="drumTrack"></div>
 </div>
 
-<div class="counter" id="counter">1 / 14</div>
+<!-- Tap hint -->
+<div class="tap-hint" id="tapHint">Ketuk untuk detail</div>
 
+<!-- Footer -->
 <div class="footer">
   <img class="footer-logo" src="assets/ugm.jpg" alt="Universitas Gadjah Mada">
 </div>
 
-<div class="detail-overlay" id="detail">
-  <button class="detail-close" onclick="closeDetail()">← Kembali</button>
-  <div id="detail-content"></div>
+<!-- Detail overlay -->
+<div class="detail-page" id="detail">
+  <div class="detail-inner">
+    <button class="detail-back" onclick="closeDetail()">← Kembali</button>
+    <div id="detail-content"></div>
+  </div>
 </div>
 
 <script>
@@ -173,12 +180,7 @@ const MITRA = [
   }
 ];
 
-const track = document.getElementById('track');
-const counterEl = document.getElementById('counter');
-const detailEl = document.getElementById('detail');
-const detailContent = document.getElementById('detail-content');
-let current = 0;
-
+/* ── helpers ── */
 function badgeClass(p) {
   if (p.includes('TIF') && p.includes('TB')) return 'badge-both';
   if (p === 'TIF') return 'badge-tif';
@@ -188,77 +190,10 @@ function badgeLabel(p) {
   if (p.includes('TIF') && p.includes('TB')) return 'TIF & TB';
   return p;
 }
-
 function logoEl(src, alt, cls) {
   if (src) return `<img class="${cls}" src="${src}" alt="${alt}">`;
   return `<div class="${cls}">${alt}</div>`;
 }
-
-MITRA.forEach((m, i) => {
-  const slide = document.createElement('div');
-  slide.className = 'slide';
-  slide.setAttribute('role', 'group');
-  slide.setAttribute('aria-label', `Mitra ${i+1} dari ${MITRA.length}: ${m.name}`);
-  slide.innerHTML = `
-    ${logoEl(m.logo, m.short, 'mitra-logo-box')}
-    <div class="mitra-name">${m.name}</div>
-    <span class="badge ${badgeClass(m.prodi)}">${badgeLabel(m.prodi)}</span>
-    <span class="tap-hint">Ketuk untuk detail</span>
-  `;
-  slide.addEventListener('click', () => openDetail(i));
-  track.appendChild(slide);
-});
-
-function goTo(idx) {
-  if (idx < 0) idx = MITRA.length - 1;
-  if (idx >= MITRA.length) idx = 0;
-  current = idx;
-  track.style.transform = `translateX(-${current * 100}%)`;
-  counterEl.textContent = `${current + 1} / ${MITRA.length}`;
-}
-
-// Touch/swipe
-let startX = 0, diffX = 0, dragging = false;
-const carouselEl = document.getElementById('carousel');
-
-carouselEl.addEventListener('touchstart', e => {
-  startX = e.touches[0].clientX;
-  dragging = true;
-  track.classList.add('dragging');
-}, { passive: true });
-
-carouselEl.addEventListener('touchmove', e => {
-  if (!dragging) return;
-  diffX = e.touches[0].clientX - startX;
-  const offset = -(current * window.innerWidth) + diffX;
-  track.style.transform = `translateX(${offset}px)`;
-}, { passive: true });
-
-carouselEl.addEventListener('touchend', () => {
-  if (!dragging) return;
-  dragging = false;
-  track.classList.remove('dragging');
-  if (Math.abs(diffX) > 50) {
-    if (diffX < 0) goTo(current + 1);
-    else goTo(current - 1);
-  } else {
-    goTo(current);
-  }
-  diffX = 0;
-});
-
-// Keyboard
-document.addEventListener('keydown', e => {
-  if (detailEl.classList.contains('open')) {
-    if (e.key === 'Escape') closeDetail();
-    return;
-  }
-  if (e.key === 'ArrowRight') goTo(current + 1);
-  if (e.key === 'ArrowLeft') goTo(current - 1);
-  if (e.key === 'Enter') openDetail(current);
-});
-
-// Detail
 function parseMK(str) {
   if (!str) return [];
   return str.split(';').map(s => s.trim()).filter(Boolean).map(s => {
@@ -268,6 +203,105 @@ function parseMK(str) {
   });
 }
 
+/* ── build drum items ── */
+const drumTrack = document.getElementById('drumTrack');
+const drum = document.getElementById('drum');
+const detailEl = document.getElementById('detail');
+const detailContent = document.getElementById('detail-content');
+
+const ITEM_H = 100; // px height per item
+
+MITRA.forEach((m, i) => {
+  const el = document.createElement('div');
+  el.className = 'drum-item';
+  el.dataset.idx = i;
+  el.innerHTML = `
+    ${logoEl(m.logo, m.short, 'drum-logo')}
+    <div class="drum-info">
+      <div class="drum-name">${m.name}</div>
+      <div class="drum-meta">
+        <span class="badge ${badgeClass(m.prodi)}">${badgeLabel(m.prodi)}</span>
+        <span class="drum-count">${m.topik.length} topik</span>
+      </div>
+    </div>
+  `;
+  el.addEventListener('click', () => {
+    const center = getCenterIdx();
+    if (i === center) {
+      openDetail(i);
+    } else {
+      scrollToIdx(i);
+    }
+  });
+  drumTrack.appendChild(el);
+});
+
+/* ── scroll-driven effects ── */
+const items = drumTrack.querySelectorAll('.drum-item');
+
+function getCenterIdx() {
+  const drumRect = drum.getBoundingClientRect();
+  const centerY = drumRect.top + drumRect.height / 2;
+  let closest = 0, minDist = Infinity;
+  items.forEach((el, i) => {
+    const r = el.getBoundingClientRect();
+    const d = Math.abs(r.top + r.height / 2 - centerY);
+    if (d < minDist) { minDist = d; closest = i; }
+  });
+  return closest;
+}
+
+function updateEffects() {
+  const drumRect = drum.getBoundingClientRect();
+  const centerY = drumRect.top + drumRect.height / 2;
+  const maxDist = drumRect.height / 2;
+
+  items.forEach(el => {
+    const r = el.getBoundingClientRect();
+    const itemCenterY = r.top + r.height / 2;
+    const dist = Math.abs(itemCenterY - centerY);
+    const ratio = Math.min(dist / maxDist, 1); // 0 = center, 1 = edge
+
+    const scale = 1 - ratio * 0.25;         // 1.0 → 0.75
+    const blur = ratio * 6;                  // 0 → 6px
+    const opacity = 1 - ratio * 0.6;        // 1.0 → 0.4
+    const rotateX = (itemCenterY - centerY) / maxDist * -15; // tilt
+
+    el.style.transform = `perspective(800px) rotateX(${rotateX}deg) scale(${scale})`;
+    el.style.filter = `blur(${blur}px)`;
+    el.style.opacity = opacity;
+  });
+
+  requestAnimationFrame(updateEffects);
+}
+
+function scrollToIdx(i) {
+  const drumRect = drum.getBoundingClientRect();
+  const targetY = items[i].offsetTop - drum.scrollTop + items[i].offsetHeight / 2;
+  const drumCenter = drumRect.height / 2;
+  drum.scrollBy({ top: items[i].offsetTop - drum.scrollTop - drumCenter + items[i].offsetHeight / 2, behavior: 'smooth' });
+}
+
+// Initial scroll to first item center
+requestAnimationFrame(() => {
+  const drumRect = drum.getBoundingClientRect();
+  const padTop = drumRect.height / 2 - ITEM_H / 2;
+  drumTrack.style.paddingTop = padTop + 'px';
+  drumTrack.style.paddingBottom = padTop + 'px';
+  updateEffects();
+});
+
+/* ── snap on scroll end ── */
+let scrollTimer;
+drum.addEventListener('scroll', () => {
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(() => {
+    const idx = getCenterIdx();
+    scrollToIdx(idx);
+  }, 80);
+}, { passive: true });
+
+/* ── detail ── */
 function openDetail(idx) {
   const m = MITRA[idx];
   let html = `
@@ -280,15 +314,12 @@ function openDetail(idx) {
     </div>
     <div class="section-label">Topik Magang & Rekomendasi MK Pilihan</div>
   `;
-
   m.topik.forEach(tp => {
     const mkTif = parseMK(tp.tif);
     const mkTb = parseMK(tp.tb);
-
     html += `<div class="topik-card">
       <div class="topik-title">${tp.t}</div>
       <div class="topik-kuota">Kuota: ${tp.kuota}</div>`;
-
     if (mkTif.length > 0) {
       html += `<div class="mk-label tif">Rekomendasi MK TIF</div><ul class="mk-list">`;
       mkTif.forEach(mk => {
@@ -296,7 +327,6 @@ function openDetail(idx) {
       });
       html += `</ul>`;
     }
-
     if (mkTb.length > 0) {
       html += `<div class="mk-label tb">Rekomendasi MK TB</div><ul class="mk-list">`;
       mkTb.forEach(mk => {
@@ -304,17 +334,21 @@ function openDetail(idx) {
       });
       html += `</ul>`;
     }
-
     html += `</div>`;
   });
-
   detailContent.innerHTML = html;
   detailEl.classList.add('open');
+  detailEl.scrollTop = 0;
 }
 
-function closeDetail() {
-  detailEl.classList.remove('open');
-}
+function closeDetail() { detailEl.classList.remove('open'); }
 
-window.carousel = { prev: () => goTo(current - 1), next: () => goTo(current + 1) };
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && detailEl.classList.contains('open')) closeDetail();
+  if (detailEl.classList.contains('open')) return;
+  const c = getCenterIdx();
+  if (e.key === 'ArrowDown') scrollToIdx(Math.min(c + 1, MITRA.length - 1));
+  if (e.key === 'ArrowUp') scrollToIdx(Math.max(c - 1, 0));
+  if (e.key === 'Enter') openDetail(c);
+});
 </script>
