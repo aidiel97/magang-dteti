@@ -2,25 +2,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
 
-<!-- Header -->
-<div class="header">
-  <img class="header-logo" src="assets/dteti.jpg" alt="DTETI">
-  <div class="header-title">Magang DTETI 2027</div>
-</div>
+<div class="page">
+  <div class="page-header">
+    <img class="header-logo" src="assets/dteti.jpg" alt="DTETI">
+    <div class="header-title">Magang DTETI 2027</div>
+    <div class="header-sub">Pilih mitra untuk melihat topik & rekomendasi MK</div>
+  </div>
 
-<!-- Drum picker -->
-<div class="drum" id="drum">
-  <div class="drum-fade drum-fade-top"></div>
-  <div class="drum-fade drum-fade-bottom"></div>
-  <div class="drum-track" id="drumTrack"></div>
-</div>
+  <div class="link-list" id="linkList"></div>
 
-<!-- Tap hint -->
-<div class="tap-hint" id="tapHint">Ketuk untuk detail</div>
-
-<!-- Footer -->
-<div class="footer">
-  <img class="footer-logo" src="assets/ugm.jpg" alt="Universitas Gadjah Mada">
+  <div class="page-footer">
+    <img class="footer-logo" src="assets/ugm.jpg" alt="Universitas Gadjah Mada">
+  </div>
 </div>
 
 <!-- Detail overlay -->
@@ -203,103 +196,42 @@ function parseMK(str) {
   });
 }
 
-/* ── build drum items ── */
-const drumTrack = document.getElementById('drumTrack');
-const drum = document.getElementById('drum');
+/* ── build link list ── */
+const linkList = document.getElementById('linkList');
 const detailEl = document.getElementById('detail');
 const detailContent = document.getElementById('detail-content');
 
-const ITEM_H = 100; // px height per item
-
 MITRA.forEach((m, i) => {
-  const el = document.createElement('div');
-  el.className = 'drum-item';
-  el.dataset.idx = i;
-  el.innerHTML = `
-    ${logoEl(m.logo, m.short, 'drum-logo')}
-    <div class="drum-info">
-      <div class="drum-name">${m.name}</div>
-      <div class="drum-meta">
+  const card = document.createElement('a');
+  card.className = 'link-card';
+  card.href = '#';
+  card.style.animationDelay = (i * 60) + 'ms';
+  card.onclick = e => { e.preventDefault(); openDetail(i); };
+  card.innerHTML = `
+    ${logoEl(m.logo, m.short, 'link-logo')}
+    <div class="link-info">
+      <div class="link-name">${m.name}</div>
+      <div class="link-meta">
         <span class="badge ${badgeClass(m.prodi)}">${badgeLabel(m.prodi)}</span>
-        <span class="drum-count">${m.topik.length} topik</span>
+        <span class="link-topik-count">${m.topik.length} topik</span>
       </div>
     </div>
+    <span class="link-arrow">›</span>
   `;
-  el.addEventListener('click', () => {
-    const center = getCenterIdx();
-    if (i === center) {
-      openDetail(i);
-    } else {
-      scrollToIdx(i);
+  linkList.appendChild(card);
+});
+
+/* ── scroll reveal ── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
     }
   });
-  drumTrack.appendChild(el);
-});
+}, { threshold: 0.1 });
 
-/* ── scroll-driven effects ── */
-const items = drumTrack.querySelectorAll('.drum-item');
-
-function getCenterIdx() {
-  const drumRect = drum.getBoundingClientRect();
-  const centerY = drumRect.top + drumRect.height / 2;
-  let closest = 0, minDist = Infinity;
-  items.forEach((el, i) => {
-    const r = el.getBoundingClientRect();
-    const d = Math.abs(r.top + r.height / 2 - centerY);
-    if (d < minDist) { minDist = d; closest = i; }
-  });
-  return closest;
-}
-
-function updateEffects() {
-  const drumRect = drum.getBoundingClientRect();
-  const centerY = drumRect.top + drumRect.height / 2;
-  const maxDist = drumRect.height / 2;
-
-  items.forEach(el => {
-    const r = el.getBoundingClientRect();
-    const itemCenterY = r.top + r.height / 2;
-    const dist = Math.abs(itemCenterY - centerY);
-    const ratio = Math.min(dist / maxDist, 1); // 0 = center, 1 = edge
-
-    const scale = 1 - ratio * 0.25;         // 1.0 → 0.75
-    const blur = ratio * 6;                  // 0 → 6px
-    const opacity = 1 - ratio * 0.6;        // 1.0 → 0.4
-    const rotateX = (itemCenterY - centerY) / maxDist * -15; // tilt
-
-    el.style.transform = `perspective(800px) rotateX(${rotateX}deg) scale(${scale})`;
-    el.style.filter = `blur(${blur}px)`;
-    el.style.opacity = opacity;
-  });
-
-  requestAnimationFrame(updateEffects);
-}
-
-function scrollToIdx(i) {
-  const drumRect = drum.getBoundingClientRect();
-  const targetY = items[i].offsetTop - drum.scrollTop + items[i].offsetHeight / 2;
-  const drumCenter = drumRect.height / 2;
-  drum.scrollBy({ top: items[i].offsetTop - drum.scrollTop - drumCenter + items[i].offsetHeight / 2, behavior: 'smooth' });
-}
-
-// Initial scroll to first item center
-requestAnimationFrame(() => {
-  const drumRect = drum.getBoundingClientRect();
-  const padTop = drumRect.height / 2 - ITEM_H / 2;
-  drumTrack.style.paddingTop = padTop + 'px';
-  drumTrack.style.paddingBottom = padTop + 'px';
-  updateEffects();
-});
-
-/* ── snap on scroll end ── */
-let scrollTimer;
-drum.addEventListener('scroll', () => {
-  clearTimeout(scrollTimer);
-  scrollTimer = setTimeout(() => {
-    const idx = getCenterIdx();
-    scrollToIdx(idx);
-  }, 80);
-}, { passive: true });
+document.querySelectorAll('.link-card').forEach(card => observer.observe(card));
 
 /* ── detail ── */
 function openDetail(idx) {
@@ -345,10 +277,5 @@ function closeDetail() { detailEl.classList.remove('open'); }
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && detailEl.classList.contains('open')) closeDetail();
-  if (detailEl.classList.contains('open')) return;
-  const c = getCenterIdx();
-  if (e.key === 'ArrowDown') scrollToIdx(Math.min(c + 1, MITRA.length - 1));
-  if (e.key === 'ArrowUp') scrollToIdx(Math.max(c - 1, 0));
-  if (e.key === 'Enter') openDetail(c);
 });
 </script>
